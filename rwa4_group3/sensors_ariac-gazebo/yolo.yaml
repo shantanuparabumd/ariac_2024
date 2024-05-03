@@ -1,0 +1,224 @@
+
+
+parts:
+  bins: # bin params - 8 total bins each bin has nine total slots (1-9)
+    bin2:
+      - type: 'battery'
+        color: 'blue'
+        slots: [1,9]
+        rotation: 'pi/6'
+      - type: 'battery'
+        color: 'green'
+        slots: [2,8]
+        rotation: 'pi/2'
+      - type: 'sensor'
+        color: 'red'
+        slots: [3,7]
+        rotation: 'pi/3'
+      - type: 'pump'
+        color: 'orange'
+        slots: [4, 6]
+        rotation: 'pi/4'
+      - type: 'pump'
+        color: 'purple'
+        slots: [5]
+        
+    bin4:
+      - type: 'battery'
+        color: 'blue'
+        slots: [1,9]
+        rotation: 'pi/6'
+      - type: 'battery'
+        color: 'green'
+        slots: [2,8]
+        rotation: 'pi/2'
+      - type: 'pump'
+        color: 'red'
+        slots: [3,7]
+        rotation: 'pi/3'
+      - type: 'sensor'
+        color: 'orange'
+        slots: [4, 6]
+        rotation: 'pi/4'
+      - type: 'sensor'
+        color: 'purple'
+        slots: [5]
+
+    bin6:
+      - type: 'sensor'
+        color: 'blue'
+        slots: [1,9]
+        rotation: 'pi/6'
+      - type: 'battery'
+        color: 'green'
+        slots: [2,8]
+        rotation: 'pi/2'
+      - type: 'pump'
+        color: 'red'
+        slots: [3,7]
+        rotation: 'pi/3'
+      - type: 'battery'
+        color: 'orange'
+        slots: [4, 6]
+        rotation: 'pi/4'
+      - type: 'battery'
+        color: 'purple'
+        slots: [5]
+    bin8:
+      - type: 'pump'
+        color: 'blue'
+        slots: [1,9]
+        rotation: 'pi/6'
+      - type: 'battery'
+        color: 'green'
+        slots: [2,8]
+        rotation: 'pi/2'
+      - type: 'sensor'
+        color: 'red'
+        slots: [3,7]
+        rotation: 'pi/3'
+      - type: 'battery'
+        color: 'orange'
+        slots: [4, 6]
+        rotation: 'pi/4'
+      - type: 'battery'
+        color: 'purple'
+        slots: [5]
+    bin1:
+      - type: 'battery'
+        color: 'blue'
+        slots: [1,9]
+        rotation: 'pi/6'
+      - type: 'pump'
+        color: 'green'
+        slots: [2,8]
+        rotation: 'pi/2'
+      - type: 'sensor'
+        color: 'red'
+        slots: [3,7]
+        rotation: 'pi/3'
+      - type: 'battery'
+        color: 'orange'
+        slots: [4, 6]
+        rotation: 'pi/4'
+      - type: 'battery'
+        color: 'purple'
+        slots: [5]
+
+    bin3:
+      - type: 'pump'
+        color: 'blue'
+        slots: [1,9]
+        rotation: 'pi/6'
+      - type: 'pump'
+        color: 'green'
+        slots: [2,8]
+        rotation: 'pi/2'
+      - type: 'battery'
+        color: 'red'
+        slots: [3,7]
+        rotation: 'pi/3'
+      - type: 'sensor'
+        color: 'orange'
+        slots: [4, 6]
+        rotation: 'pi/4'
+      - type: 'battery'
+        color: 'purple'
+        slots: [5]
+    bin5:
+      - type: 'sensor'
+        color: 'blue'
+        slots: [1,9]
+        rotation: 'pi/6'
+      - type: 'sensor'
+        color: 'green'
+        slots: [2,8]
+        rotation: 'pi/2'
+      - type: 'battery'
+        color: 'red'
+        slots: [3,7]
+        rotation: 'pi/3'
+      - type: 'battery'
+        color: 'orange'
+        slots: [4, 6]
+        rotation: 'pi/4'
+      - type: 'pump'
+        color: 'purple'
+        slots: [5]
+    bin7:
+      - type: 'battery'
+        color: 'blue'
+        slots: [1,9]
+        rotation: 'pi/6'
+      - type: 'battery'
+        color: 'green'
+        slots: [2,8]
+        rotation: 'pi/2'
+      - type: 'battery'
+        color: 'red'
+        slots: [3,7]
+        rotation: 'pi/3'
+      - type: 'sensor'
+        color: 'orange'
+        slots: [4, 6]
+        rotation: 'pi/4'
+      - type: 'pump'
+        color: 'purple'
+        slots: [5]
+    
+    
+  
+
+orders:
+  - id: 'KITTING01'
+    type: 'kitting'
+    announcement:
+      timebluecondition: 0
+    priority: false
+    kittingbluetask:
+      agvbluenumber: 1
+      trayblueid: 1
+      destination: 'warehouse'
+      products:
+        - type: 'battery'
+          color: 'red'
+          quadrant: 2
+        - type: 'battery'
+          color: 'blue'
+          quadrant: 1
+  - id: 'KITTING02'
+    type: 'kitting'
+    announcement:
+      timebluecondition: 10
+    priority: true
+    kittingbluetask:
+      agvbluenumber: 2
+      trayblueid: 1
+      destination: 'warehouse'
+      products:
+        - type: 'battery'
+          color: 'blue'
+          quadrant: 2
+        - type: 'battery'
+          color: 'red'
+          quadrant: 3
+  - id: 'KITTING03'
+    type: 'kitting'
+    announcement:
+      submissionbluecondition:
+        orderblueid: 'KITTING02'
+    priority: false
+    kittingbluetask:
+      agvbluenumber: 3
+      trayblueid: 2
+      destination: 'warehouse'
+      products:
+        - type: 'battery'
+          color: 'orange'
+          quadrant: 1
+        - type: 'battery'
+          color: 'orange'
+          quadrant: 2
+        - type: 'battery'
+          color: 'orange'
+          quadrant: 3

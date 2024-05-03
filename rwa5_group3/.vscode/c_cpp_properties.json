@@ -1,0 +1,33 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${default}",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/home/shantanu/ariac_ws/install/test_competitor/include/**",
+        "/home/shantanu/ariac_ws/install/rwa4_group3/include/**",
+        "/home/shantanu/ariac_ws/install/robot_commander_msgs/include/**",
+        "/home/shantanu/ariac_ws/install/ariac_sensors/include/**",
+        "/home/shantanu/ariac_ws/install/ariac_plugins/include/**",
+        "/home/shantanu/ariac_ws/install/ariac_msgs/include/**",
+        "/opt/ros/galactic/include/**",
+        "/home/shantanu/ariac_ws/src/ARIAC/ariac_plugins/include/**",
+        "/home/shantanu/ariac_ws/src/ARIAC/ariac_sensors/include/**",
+        "/home/shantanu/ariac_ws/src/ARIAC/test_competitor/include/**",
+        "/home/shantanu/ariac_ws/src/enpm663_spring2024/moveit_demo/include/**",
+        "/home/shantanu/ariac_ws/src/rwa_group3/rwa3_group3/include/**",
+        "/home/shantanu/ariac_ws/src/rwa_group3/rwa4_group3/include/**",
+        "/home/shantanu/ariac_ws/src/rwa_group3/rwa5_group3/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS",
+      "intelliSenseMode": "gcc-x64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++14"
+    }
+  ],
+  "version": 4
+}

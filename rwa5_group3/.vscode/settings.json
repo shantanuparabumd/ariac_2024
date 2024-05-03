@@ -1,0 +1,26 @@
+{
+    "python.autoComplete.extraPaths": [
+        "/home/shantanu/ariac_ws/install/rwa4_group3/lib/python3.8/site-packages",
+        "/home/shantanu/ariac_ws/install/rqt_joint_trajectory_controller/lib/python3.8/site-packages",
+        "/home/shantanu/ariac_ws/install/moveit_demo/lib/python3.8/site-packages",
+        "/home/shantanu/ariac_ws/install/robot_commander_msgs/lib/python3.8/site-packages",
+        "/home/shantanu/ariac_ws/install/ariac_human/lib/python3.8/site-packages",
+        "/home/shantanu/ariac_ws/install/ariac_gui/lib/python3.8/site-packages",
+        "/home/shantanu/ariac_ws/install/ariac_msgs/lib/python3.8/site-packages",
+        "/home/shantanu/ariac_ws/install/ariac_moveit_config/lib/python3.8/site-packages",
+        "/home/shantanu/ariac_ws/install/ariac_gazebo/lib/python3.8/site-packages",
+        "/opt/ros/galactic/lib/python3.8/site-packages"
+    ],
+    "python.analysis.extraPaths": [
+        "/home/shantanu/ariac_ws/install/rwa4_group3/lib/python3.8/site-packages",
+        "/home/shantanu/ariac_ws/install/rqt_joint_trajectory_controller/lib/python3.8/site-packages",
+        "/home/shantanu/ariac_ws/install/moveit_demo/lib/python3.8/site-packages",
+        "/home/shantanu/ariac_ws/install/robot_commander_msgs/lib/python3.8/site-packages",
+        "/home/shantanu/ariac_ws/install/ariac_human/lib/python3.8/site-packages",
+        "/home/shantanu/ariac_ws/install/ariac_gui/lib/python3.8/site-packages",
+        "/home/shantanu/ariac_ws/install/ariac_msgs/lib/python3.8/site-packages",
+        "/home/shantanu/ariac_ws/install/ariac_moveit_config/lib/python3.8/site-packages",
+        "/home/shantanu/ariac_ws/install/ariac_gazebo/lib/python3.8/site-packages",
+        "/opt/ros/galactic/lib/python3.8/site-packages"
+    ]
+}

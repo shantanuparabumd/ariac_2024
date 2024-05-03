@@ -1,0 +1,178 @@
+parts:
+  bins:
+    bin1:
+    - type: regulator
+      color: green
+      slots:
+      - 1
+      - 9
+      - 5
+      rotation: pi/3
+    - type: pump
+      color: red
+      slots:
+      - 6
+      - 3
+      - 2
+      - 4
+      rotation: pi/6
+    - type: pump
+      color: red
+      slots:
+      - 7
+      - 8
+      rotation: pi/2
+    bin2:
+    - type: sensor
+      color: green
+      slots:
+      - 9
+      - 1
+      rotation: pi/3
+    - type: pump
+      color: blue
+      slots:
+      - 6
+      rotation: pi/2
+    - type: sensor
+      color: blue
+      slots:
+      - 7
+      - 2
+      - 3
+      - 8
+      - 5
+      rotation: pi/3
+    bin3:
+    - type: battery
+      color: blue
+      slots:
+      - 7
+      - 1
+      - 5
+      - 3
+      - 2
+      - 9
+      - 4
+      - 6
+      - 8
+      rotation: pi/2
+    bin4:
+    - type: regulator
+      color: red
+      slots:
+      - 7
+      - 1
+      - 4
+      - 5
+      - 2
+      - 6
+      - 9
+      - 8
+      rotation: pi/3
+    - type: regulator
+      color: green
+      slots:
+      - 3
+      rotation: pi/2
+    bin5:
+    - type: regulator
+      color: purple
+      slots:
+      - 6
+      - 5
+      - 7
+      rotation: -pi/2
+    - type: battery
+      color: purple
+      slots:
+      - 2
+      - 4
+      - 8
+      - 3
+      rotation: pi/6
+    - type: battery
+      color: orange
+      slots:
+      - 1
+      rotation: pi/2
+    bin6:
+    - type: pump
+      color: orange
+      slots:
+      - 1
+      - 6
+      - 8
+      - 7
+      - 2
+      - 5
+      - 3
+      rotation: -pi/2
+    - type: battery
+      color: blue
+      slots:
+      - 9
+      rotation: '0'
+    - type: sensor
+      color: purple
+      slots:
+      - 4
+      rotation: -pi/6
+    bin7:
+    - type: pump
+      color: blue
+      slots:
+      - 4
+      - 9
+      - 6
+      - 3
+      - 5
+      - 2
+      - 1
+      - 7
+      rotation: -pi/3
+    - type: pump
+      color: green
+      slots:
+      - 8
+      rotation: -pi/3
+    bin8:
+    - type: battery
+      color: purple
+      slots:
+      - 9
+      - 8
+      rotation: pi/3
+    - type: battery
+      color: green
+      slots:
+      - 2
+      - 6
+      - 4
+      rotation: '0'
+    - type: pump
+      color: red
+      slots:
+      - 3
+      - 1
+      - 5
+      - 7
+      rotation: pi/2
+    bin9:
+    - type: sensor
+      color: red
+      slots:
+      - 5
+      rotation: pi/3
+    - type: battery
+      color: green
+      slots:
+      - 3
+      - 9
+      rotation: pi/6
+    - type: battery
+      color: purple
+      slots:
+      - 6
+      - 1
+      rotation: -pi/6

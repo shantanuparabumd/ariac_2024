@@ -1,0 +1,150 @@
+parts:
+  bins:
+    bin1:
+    - type: pump
+      color: green
+      slots:
+      - 7
+      - 2
+      - 8
+      - 3
+      - 4
+      rotation: pi/10
+    bin2:
+    - type: sensor
+      color: blue
+      slots:
+      - 4
+      - 3
+      - 8
+      rotation: pi/7
+    - type: pump
+      color: orange
+      slots:
+      - 1
+      - 5
+      rotation: -pi/2
+    bin3:
+    - type: regulator
+      color: red
+      slots:
+      - 1
+      - 5
+      - 4
+      - 2
+      rotation: -pi/5
+    - type: pump
+      color: red
+      slots:
+      - 3
+      - 8
+      - 6
+      rotation: -pi/4
+    - type: regulator
+      color: purple
+      slots:
+      - 9
+      rotation: pi/8
+    - type: sensor
+      color: red
+      slots:
+      - 7
+      rotation: pi/4
+    bin4:
+    - type: pump
+      color: purple
+      slots:
+      - 3
+      - 7
+      - 2
+      rotation: pi/4
+    - type: regulator
+      color: blue
+      slots:
+      - 9
+      rotation: -pi/8
+    - type: regulator
+      color: green
+      slots:
+      - 5
+      - 6
+      rotation: -pi/3
+    - type: battery
+      color: orange
+      slots:
+      - 1
+      rotation: -pi/5
+    bin5:
+    - type: sensor
+      color: blue
+      slots:
+      - 9
+      - 7
+      - 5
+      - 4
+      - 2
+      - 1
+      rotation: -pi/5
+    - type: battery
+      color: red
+      slots:
+      - 8
+      - 6
+      rotation: -pi/10
+    bin6:
+    - type: pump
+      color: orange
+      slots:
+      - 5
+      - 3
+      - 2
+      - 8
+      - 4
+      rotation: -pi/5
+    bin7:
+    - type: sensor
+      color: green
+      slots:
+      - 1
+      - 9
+      - 6
+      rotation: pi/10
+    - type: pump
+      color: green
+      slots:
+      - 3
+      - 7
+      - 4
+      - 5
+      - 2
+      rotation: -pi/3
+    - type: regulator
+      color: purple
+      slots:
+      - 8
+      rotation: -pi/2
+    bin8:
+    - type: pump
+      color: purple
+      slots:
+      - 8
+      - 2
+      rotation: -pi/10
+    - type: pump
+      color: blue
+      slots:
+      - 7
+      - 3
+      - 4
+      - 1
+      rotation: pi/4
+    - type: pump
+      color: purple
+      slots:
+      - 6
+      rotation: '0'
+    - type: pump
+      color: purple
+      slots:
+      - 9
+      rotation: pi/7

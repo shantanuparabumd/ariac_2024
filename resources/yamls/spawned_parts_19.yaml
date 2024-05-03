@@ -1,0 +1,127 @@
+parts:
+  bins:
+    bin1:
+    - type: sensor
+      color: orange
+      slots:
+      - 5
+      - 8
+      - 9
+      - 1
+      - 4
+      - 2
+      - 7
+      - 3
+      - 6
+      rotation: -pi/3
+    bin2:
+    - type: battery
+      color: green
+      slots:
+      - 8
+      - 3
+      - 2
+      - 6
+      - 9
+      - 4
+      rotation: -pi/9
+    - type: battery
+      color: green
+      slots:
+      - 7
+      - 1
+      - 5
+      rotation: pi/4
+    bin3:
+    - type: pump
+      color: red
+      slots:
+      - 1
+      - 6
+      - 4
+      - 9
+      - 3
+      - 7
+      rotation: pi/7
+    - type: pump
+      color: green
+      slots:
+      - 5
+      - 2
+      rotation: pi/4
+    - type: pump
+      color: green
+      slots:
+      - 8
+      rotation: pi/10
+    bin4:
+    - type: sensor
+      color: red
+      slots:
+      - 2
+      - 6
+      - 3
+      - 9
+      - 4
+      - 1
+      - 7
+      rotation: pi/7
+    - type: battery
+      color: purple
+      slots:
+      - 8
+      rotation: pi/7
+    bin5:
+    - type: sensor
+      color: blue
+      slots:
+      - 8
+      - 4
+      - 6
+      - 3
+      rotation: -pi/4
+    bin6:
+    - type: battery
+      color: green
+      slots:
+      - 9
+      - 5
+      - 4
+      - 7
+      - 6
+      - 3
+      - 8
+      - 1
+      rotation: pi/9
+    bin7:
+    - type: sensor
+      color: red
+      slots:
+      - 3
+      - 4
+      - 6
+      - 2
+      rotation: pi/4
+    - type: battery
+      color: red
+      slots:
+      - 8
+      - 9
+      - 5
+      - 1
+      rotation: -pi/7
+    bin8:
+    - type: sensor
+      color: blue
+      slots:
+      - 8
+      rotation: pi/3
+    - type: sensor
+      color: blue
+      slots:
+      - 9
+      - 6
+      - 4
+      - 3
+      - 5
+      rotation: -pi/5
