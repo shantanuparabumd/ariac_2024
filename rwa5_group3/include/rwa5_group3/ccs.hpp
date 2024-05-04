@@ -77,7 +77,7 @@ class CCS : public rclcpp::Node {
    * flags and counters like a state machine
    *
    */
-  void Manager();
+  void manager();
 
   // Callback Functions
 
@@ -87,13 +87,13 @@ class CCS : public rclcpp::Node {
    * Updates the global variable 'competition_state_'
    * @param msg ariac_msgs::msg::CompetitionState
    */
-  void UpdateCompetitionState(
+  void updateCompetitionState(
       const ariac_msgs::msg::CompetitionState::SharedPtr msg);
 
   
-  void UpdateSensorReading(ariac_msgs::msg::AdvancedLogicalCameraImage::SharedPtr msg);
+  void updateSensorReading(ariac_msgs::msg::AdvancedLogicalCameraImage::SharedPtr msg);
   
-  void UpdateRobotStatus(const rwa5_group3::msg::RobotStatus::SharedPtr msg);
+  void updateRobotStatus(const rwa5_group3::msg::RobotStatus::SharedPtr msg);
 
   /**
    * @brief Call back function for the order announcement
@@ -101,7 +101,7 @@ class CCS : public rclcpp::Node {
    * Stores the order in the 'order_queue' priority queue
    * @param msg ariac_msgs::msg::Order
    */
-  void StoreOrder(const ariac_msgs::msg::Order::SharedPtr msg);
+  void storeOrder(const ariac_msgs::msg::Order::SharedPtr msg);
 
   /**
    * @brief Call back function for the agv1 status
@@ -109,7 +109,7 @@ class CCS : public rclcpp::Node {
    * Uses the agv status to submit the order
    * @param msg ariac_msgs::msg::AGVStatus
    */
-  void UpdateAGV1Status(const ariac_msgs::msg::AGVStatus::SharedPtr msg);
+  void updateAGV1Status(const ariac_msgs::msg::AGVStatus::SharedPtr msg);
 
   /**
    * @brief Call back function for the agv2 status
@@ -117,7 +117,7 @@ class CCS : public rclcpp::Node {
    * Uses the agv status to submit the order
    * @param msg ariac_msgs::msg::AGVStatus
    */
-  void UpdateAGV2Status(const ariac_msgs::msg::AGVStatus::SharedPtr msg);
+  void updateAGV2Status(const ariac_msgs::msg::AGVStatus::SharedPtr msg);
 
   /**
    * @brief Call back function for the agv3 status
@@ -125,7 +125,7 @@ class CCS : public rclcpp::Node {
    * Uses the agv status to submit the order
    * @param msg ariac_msgs::msg::AGVStatus
    */
-  void UpdateAGV3Status(const ariac_msgs::msg::AGVStatus::SharedPtr msg);
+  void updateAGV3Status(const ariac_msgs::msg::AGVStatus::SharedPtr msg);
 
   /**
    * @brief Call back function for the agv4 status
@@ -133,7 +133,7 @@ class CCS : public rclcpp::Node {
    * Uses the agv status to submit the order
    * @param msg ariac_msgs::msg::AGVStatus
    */
-  void UpdateAGV4Status(const ariac_msgs::msg::AGVStatus::SharedPtr msg);
+  void updateAGV4Status(const ariac_msgs::msg::AGVStatus::SharedPtr msg);
 
   /**
    * @brief Callback for the move agv service future
@@ -153,7 +153,7 @@ class CCS : public rclcpp::Node {
    * @return true If the service call was successful
    * @return false If the service call was unsuccessful
    */
-  bool StartCompetition();
+  bool startCompetition();
 
   /**
    * @brief End the competition
@@ -162,7 +162,7 @@ class CCS : public rclcpp::Node {
    * @return true If the service call was successful
    * @return false If the service call was unsuccessful
    */
-  bool EndCompetition();
+  bool endCompetition();
 
   /**
    * @brief Locks the tray on the AGV
@@ -172,7 +172,7 @@ class CCS : public rclcpp::Node {
    * @return true If the service call was successful
    * @return false If the service call was unsuccessful
    */
-  bool LockAGV(int number);
+  bool lockAGV(int number);
 
   /**
    * @brief Move the AGV to the destination
@@ -183,7 +183,7 @@ class CCS : public rclcpp::Node {
    * @param number  The number of the AGV to move
    * @param destination The destination to move the AGV to
    */
-  void MoveAGV(int number, int destination);
+  void moveAGV(int number, int destination);
 
   /**
    * @brief Submits the order to the competition
@@ -193,12 +193,18 @@ class CCS : public rclcpp::Node {
    * @return true If the service call was successful
    * @return false If the service call was unsuccessful
    */
-  bool SubmitOrder(std::string order_id);
-
-  OrderStatus PerformQualityCheck(std::string order_id);
+  bool submitOrder(std::string order_id);
 
 
-  std::vector<ariac_msgs::msg::PartPose> GetPartPose(std::string order_id);
+  /**
+   * @brief Perform the quality check of the order after being placed on the AGV
+   * 
+   * @param order_id 
+   * @return OrderStatus 
+   */
+  OrderStatus performQualityCheck(std::string order_id);
+
+
 
   ///////////// Helper Functions //////////////
 
@@ -208,21 +214,21 @@ class CCS : public rclcpp::Node {
    * @param o 
    * @return std::vector<rwa5_group3::msg::RobotTask> 
    */
-  std::vector<rwa5_group3::msg::RobotTask> CreateRobotTask(Order o);
+  std::vector<rwa5_group3::msg::RobotTask> createRobotTask(Order o);
 
   /**
    * @brief Execute the tasks
    * Given a list of tasks, assigns the task to available robot
    * @param tasks 
    */
-  void ExecuteTasks(std::vector<rwa5_group3::msg::RobotTask> tasks, Order o);
+  void executeTasks(std::vector<rwa5_group3::msg::RobotTask> tasks, Order o);
 
   /**
    * @brief Process the order
    * Locks the AGV, moves the AGV to the destination and submits the order
    * @param o Details of the order to process
    */
-  void ProcessOrder(Order o);
+  void processOrder(Order o);
 
   /**
    * @brief Select the order to process
@@ -230,7 +236,7 @@ class CCS : public rclcpp::Node {
    * Selects the order with the highest priority
    * Uses correponding AGV to process the order
    */
-  void SelectOrder();
+  void selectOrder();
 
   /**
    * @brief Checks the status of the AGV
@@ -241,10 +247,14 @@ class CCS : public rclcpp::Node {
    * @param location
    * @param vel
    */
-  void ProcessAGVStatus(int agv, int location, float vel);
+  void processAGVStatus(int agv, int location, float vel);
 
-
-  void Retry(rwa5_group3::msg::RobotTask task);
+  /**
+   * @brief Retry the task that failed or had faulty parts
+   * 
+   * @param task 
+   */
+  void retry(rwa5_group3::msg::RobotTask task);
 
  private:
 

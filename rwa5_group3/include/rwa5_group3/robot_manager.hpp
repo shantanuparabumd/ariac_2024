@@ -77,7 +77,7 @@ class RobotManager : public rclcpp::Node
          * @param agv_number 
          * @param tray_id 
          */
-        void FloorRobotPickTray(geometry_msgs::msg::Pose pose, int agv_number,int tray_id);
+        void floorRobotPickTray(geometry_msgs::msg::Pose pose, int agv_number,int tray_id);
 
 
         /**
@@ -86,7 +86,8 @@ class RobotManager : public rclcpp::Node
          * @param pose 
          */
 
-        bool FloorRobotPickPart(geometry_msgs::msg::Pose pose);
+        bool floorRobotPickPart(geometry_msgs::msg::Pose pose);
+
         // Subscriber Callbacks
 
         /**
@@ -94,7 +95,7 @@ class RobotManager : public rclcpp::Node
          * Get the new task tobe executed by the robots
          * @param msg 
          */
-        void robot_task_callback(const rwa5_group3::msg::RobotTask::SharedPtr msg);
+        void robotTaskCallback(const rwa5_group3::msg::RobotTask::SharedPtr msg);
 
 
         /**
@@ -102,7 +103,7 @@ class RobotManager : public rclcpp::Node
          *  The state is neccessary to identify wether the gripper is attached to the part or not
          * @param msg 
          */
-        void floor_gripper_state_cb(const ariac_msgs::msg::VacuumGripperState::ConstSharedPtr msg);
+        void floorGripperStateCB(const ariac_msgs::msg::VacuumGripperState::ConstSharedPtr msg);
 
         // Helper Functions Motion
 
@@ -113,7 +114,7 @@ class RobotManager : public rclcpp::Node
          * @return true 
          * @return false 
          */
-        bool move_floor_to_target_();
+        bool moveFloorToTarget();
         
 
         /**
@@ -123,7 +124,7 @@ class RobotManager : public rclcpp::Node
          * @return true 
          * @return false 
          */
-        bool move_through_waypoints_(std::vector<geometry_msgs::msg::Pose> waypoints, double vsf, double asf);
+        bool moveThroughWaypoints(std::vector<geometry_msgs::msg::Pose> waypoints, double vsf, double asf);
 
 
         /**
@@ -136,12 +137,7 @@ class RobotManager : public rclcpp::Node
         bool pick(geometry_msgs::msg::Pose pose, std::string type);
 
 
-        /**
-         * @brief Move towards the part/tray until the gripper is attached
-         * 
-         * @param timeout Time to wait for the gripper to attach
-         */
-        void wait_for_attach_completion_(double timeout);
+        
 
 
         /**
@@ -151,9 +147,25 @@ class RobotManager : public rclcpp::Node
          * @return true 
          * @return false 
          */
-        bool move_tray_to_agv(int agv_number);
+        bool moveTrayToAGV(int agv_number);
 
-        bool move_part_to_quadrant();
+
+        /**
+         * @brief Move the robot to the speciied quadrant
+         * 
+         * @return true 
+         * @return false 
+         */
+        bool movePartToQuadrant();
+        
+
+         /**
+         * @brief Move to the central bin to discard the part
+         * 
+         * @return true 
+         * @return false 
+         */
+        bool movePartToDiscard();
 
 
         /**
@@ -164,7 +176,7 @@ class RobotManager : public rclcpp::Node
          * @return true 
          * @return false 
          */
-        bool change_gripper_(std::string changing_station, std::string gripper_type);
+        bool changeGripper(std::string changing_station, std::string gripper_type);
 
 
         // Utility Functions
@@ -175,7 +187,7 @@ class RobotManager : public rclcpp::Node
          * 
          * @return geometry_msgs::msg::Pose 
          */
-        geometry_msgs::msg::Pose get_pose_in_world_frame_(std::string frame_id);
+        geometry_msgs::msg::Pose getPoseInWorldFrame(std::string frame_id);
         
 
         /**
@@ -184,7 +196,7 @@ class RobotManager : public rclcpp::Node
          * @param rotation 
          * @return geometry_msgs::msg::Quaternion 
          */
-        geometry_msgs::msg::Quaternion set_robot_orientation_(double rotation);
+        geometry_msgs::msg::Quaternion setRobotOrientation(double rotation);
 
         
         // Other Helper Functions
@@ -196,7 +208,7 @@ class RobotManager : public rclcpp::Node
          * @return true 
          * @return false 
          */
-        bool set_gripper_state_(bool enable);
+        bool setGripperState(bool enable);
 
 
         /**
@@ -206,20 +218,43 @@ class RobotManager : public rclcpp::Node
          * @param mesh_file 
          * @param pose 
          */
-        void add_single_model_to_planning_scene_(std::string name, std::string mesh_file, geometry_msgs::msg::Pose model_pose);
+        void addSingleModelToPlanningScene(std::string name, std::string mesh_file, geometry_msgs::msg::Pose model_pose);
         
+        /**
+         * @brief Add all the models to the planning scene
+         * 
+         */
+        void addModelsToPlanningScene();
+
+
+        /**
+         * @brief Perform the quality check of the order that is placed on AGV
+         * 
+         * @param order_id 
+         * @return OrderStatus 
+         */
+        OrderStatus performQualityCheck(std::string order_id);
+
+        /**
+         * @brief Check if the part is faulty
+         * 
+         * @param quadrant 
+         * @return true 
+         * @return false 
+         */
+        bool checkFaultyPart(int quadrant);
+
+        /**
+         * @brief Check if the part is missing
+         * 
+         * @param quadrant 
+         * @return true 
+         * @return false 
+         */
+        bool checkMissingPart(int quadrant);
+
         
-        void add_models_to_planning_scene ();
-
-        OrderStatus PerformQualityCheck(std::string order_id);
-
-        bool CheckFaultyPart(int quadrant);
-
-        bool CheckMissingPart(int quadrant);
-
-        
-
-        bool move_part_to_discard();
+       
 
 
 
@@ -315,7 +350,7 @@ class RobotManager : public rclcpp::Node
         double kit_tray_thickness_ = 0.02;
         //! Distance between the tray and the gripper in meters.
         /*! This is used to place the gripper at a safe distance from the tray when dropping a part in the tray */
-        double drop_height_ = 0.015;
+        double drop_height_ = 0.018;
         //! Distance between the tray and the part in meters.
         /*! This is used to pick up a part */
         double pick_offset_ = 0.003;

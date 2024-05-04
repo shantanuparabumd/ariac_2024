@@ -22,19 +22,19 @@ CCS::CCS(std::string node_name) : Node(node_name) {
   order_process_group_ =
       this->create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
 
-  // Create a MutEx Callback group for handling announced orders (StoreOrders)
+  // Create a MutEx Callback group for handling announced orders (storeOrders)
   order_storing_group_ =
       this->create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
 
   // Timer to run the main (manager) function
   timer_ = this->create_wall_timer(
-      std::chrono::milliseconds((int)(1000.0)), std::bind(&CCS::Manager, this),
+      std::chrono::milliseconds((int)(1000.0)), std::bind(&CCS::manager, this),
       order_process_group_);  //<< Using MutEx Callback
 
   // Subscriber for "ariac/competition_state"
   c_state_sub_ = this->create_subscription<ariac_msgs::msg::CompetitionState>(
       "ariac/competition_state", 10,
-      std::bind(&CCS::UpdateCompetitionState, this, std::placeholders::_1));
+      std::bind(&CCS::updateCompetitionState, this, std::placeholders::_1));
 
   // Add callback group to Subscriber (ariac/orders)
   rclcpp::SubscriptionOptions options;
@@ -43,7 +43,7 @@ CCS::CCS(std::string node_name) : Node(node_name) {
   // Subscriber for "ariac/orders"
   order_subcriber_ = this->create_subscription<ariac_msgs::msg::Order>(
       "ariac/orders", 10,
-      std::bind(&CCS::StoreOrder, this, std::placeholders::_1),
+      std::bind(&CCS::storeOrder, this, std::placeholders::_1),
       options  //<< Mutex Callback Group
   );
 
@@ -58,25 +58,25 @@ CCS::CCS(std::string node_name) : Node(node_name) {
   // Subscriber for "/ariac/agv1_status"
   agv1_subcriber_ = this->create_subscription<ariac_msgs::msg::AGVStatus>(
       "/ariac/agv1_status", 10,
-      std::bind(&CCS::UpdateAGV1Status, this, std::placeholders::_1),
+      std::bind(&CCS::updateAGV1Status, this, std::placeholders::_1),
       agv_options);
 
   // Subscriber for "/ariac/agv2_status"
   agv2_subcriber_ = this->create_subscription<ariac_msgs::msg::AGVStatus>(
       "/ariac/agv2_status", 10,
-      std::bind(&CCS::UpdateAGV2Status, this, std::placeholders::_1),
+      std::bind(&CCS::updateAGV2Status, this, std::placeholders::_1),
       agv_options);
 
   // Subscriber for "/ariac/agv3_status"
   agv3_subcriber_ = this->create_subscription<ariac_msgs::msg::AGVStatus>(
       "/ariac/agv3_status", 10,
-      std::bind(&CCS::UpdateAGV3Status, this, std::placeholders::_1),
+      std::bind(&CCS::updateAGV3Status, this, std::placeholders::_1),
       agv_options);
 
   // Subscriber for "/ariac/agv4_status"
   agv4_subcriber_ = this->create_subscription<ariac_msgs::msg::AGVStatus>(
       "/ariac/agv4_status", 10,
-      std::bind(&CCS::UpdateAGV4Status, this, std::placeholders::_1),
+      std::bind(&CCS::updateAGV4Status, this, std::placeholders::_1),
       agv_options);
 
   // Set QoS profile
@@ -87,7 +87,7 @@ CCS::CCS(std::string node_name) : Node(node_name) {
   qos_profile.durability(rclcpp::DurabilityPolicy::SystemDefault);
 
   sensor_subscriber_ = this->create_subscription<ariac_msgs::msg::AdvancedLogicalCameraImage>(
-      "/rwa_group3/detected_parts", qos_profile, std::bind(&CCS::UpdateSensorReading, this, std::placeholders::_1));
+      "/rwa_group3/detected_parts", qos_profile, std::bind(&CCS::updateSensorReading, this, std::placeholders::_1));
 
   // Robot Task Publisher
   robot_task_publisher_ = this->create_publisher<rwa5_group3::msg::RobotTask>(
@@ -98,7 +98,7 @@ CCS::CCS(std::string node_name) : Node(node_name) {
 
   robot_status_subscriber_ = this->create_subscription<rwa5_group3::msg::RobotStatus>(
       "robot_status", 10,
-      std::bind(&CCS::UpdateRobotStatus, this, std::placeholders::_1),
+      std::bind(&CCS::updateRobotStatus, this, std::placeholders::_1),
       options);
 
 
@@ -119,7 +119,7 @@ CCS::CCS(std::string node_name) : Node(node_name) {
 
 
 //=================================================================================================
-void CCS::UpdateRobotStatus(const rwa5_group3::msg::RobotStatus::SharedPtr msg) {
+void CCS::updateRobotStatus(const rwa5_group3::msg::RobotStatus::SharedPtr msg) {
   // RCLCPP_INFO_STREAM(this->get_logger(), "Robot Status Updated");
   floor_robot_ = msg->floor_robot;
   ceiling_robot_ = msg->ceiling_robot;
@@ -133,7 +133,7 @@ void CCS::UpdateRobotStatus(const rwa5_group3::msg::RobotStatus::SharedPtr msg) 
     retry_count_++;
 
     // Create a bound function to process the each new order
-    auto boundFunction = std::bind(&CCS::Retry, this, task);
+    auto boundFunction = std::bind(&CCS::retry, this, task);
     
     // Process the order on a new thread
     std::future<void> result = std::async(std::launch::async, boundFunction);
@@ -148,7 +148,7 @@ void CCS::UpdateRobotStatus(const rwa5_group3::msg::RobotStatus::SharedPtr msg) 
 }
 
 
-void CCS::Retry(rwa5_group3::msg::RobotTask task){
+void CCS::retry(rwa5_group3::msg::RobotTask task){
 
   rwa5_group3::msg::RobotStatus robot_status;
   robot_status.floor_robot = rwa5_group3::msg::RobotStatus::OCCUPIED;
@@ -187,6 +187,7 @@ void CCS::Retry(rwa5_group3::msg::RobotTask task){
                   robot_status.floor_robot = rwa5_group3::msg::RobotStatus::FREE;
                   robot_status_publisher_->publish(robot_status);
                   floor_robot_ = rwa5_group3::msg::RobotStatus::FREE;
+                  break;
               }
   }
   robot_task_publisher_->publish(task);
@@ -201,11 +202,11 @@ void CCS::Retry(rwa5_group3::msg::RobotTask task){
 
 
 //=================================================================================================
-void CCS::ProcessAGVStatus(int agv, int location, float vel) {
+void CCS::processAGVStatus(int agv, int location, float vel) {
 
   if (location == ariac_msgs::msg::AGVStatus::WAREHOUSE && !agv_flag_[agv-1]) {
     if (std::abs(vel) < 0.00025) {
-        SubmitOrder(agv_map[agv].id);
+        submitOrder(agv_map[agv].id);
         agv_flag_[agv-1] = true;
         submit_count_++;
         if (agv_map[agv].priority == 1){
@@ -224,7 +225,7 @@ void CCS::ProcessAGVStatus(int agv, int location, float vel) {
 }
 
 //=================================================================================================
-void CCS::Manager(){
+void CCS::manager(){
 
 
   
@@ -234,7 +235,7 @@ void CCS::Manager(){
         RCLCPP_INFO_STREAM(this->get_logger(),
         ORANGE<<"Start the competition"<<RESET);
         // Start the competition
-        StartCompetition();
+        startCompetition();
 
     }
     // Check if the competition has started and if no orders are present
@@ -260,7 +261,7 @@ void CCS::Manager(){
         warm_up_ = true;
         }
         // Select the order
-        SelectOrder();
+        selectOrder();
     }
     if(competiton_state_ == 4){
         RCLCPP_INFO_STREAM(this->get_logger(),
@@ -273,7 +274,7 @@ void CCS::Manager(){
 ////////////////// Subscriber Callbacks //////////////////////
 
 
-void CCS::UpdateSensorReading(const ariac_msgs::msg::AdvancedLogicalCameraImage::SharedPtr msg){
+void CCS::updateSensorReading(const ariac_msgs::msg::AdvancedLogicalCameraImage::SharedPtr msg){
     // Store the part in the map
     for(auto part: msg->part_poses){
         // RCLCPP_INFO_STREAM(this->get_logger(), "Part Detected: " << std::to_string(part.part.type) << " " << std::to_string(part.part.color));
@@ -285,35 +286,35 @@ void CCS::UpdateSensorReading(const ariac_msgs::msg::AdvancedLogicalCameraImage:
 }
 
 //=================================================================================================
-void CCS::UpdateAGV4Status(const ariac_msgs::msg::AGVStatus::SharedPtr msg) {
+void CCS::updateAGV4Status(const ariac_msgs::msg::AGVStatus::SharedPtr msg) {
   float vel = msg->velocity;
   int location = msg->location;
-  ProcessAGVStatus(4, location, vel);
+  processAGVStatus(4, location, vel);
 }
 
 //=================================================================================================
-void CCS::UpdateAGV3Status(const ariac_msgs::msg::AGVStatus::SharedPtr msg) {
+void CCS::updateAGV3Status(const ariac_msgs::msg::AGVStatus::SharedPtr msg) {
   float vel = msg->velocity;
   int location = msg->location;
-  ProcessAGVStatus(3, location, vel);
+  processAGVStatus(3, location, vel);
 }
 
 //=================================================================================================
-void CCS::UpdateAGV2Status(const ariac_msgs::msg::AGVStatus::SharedPtr msg) {
+void CCS::updateAGV2Status(const ariac_msgs::msg::AGVStatus::SharedPtr msg) {
   float vel = msg->velocity;
   int location = msg->location;
-  ProcessAGVStatus(2, location, vel);
+  processAGVStatus(2, location, vel);
 }
 
 //=================================================================================================
-void CCS::UpdateAGV1Status(const ariac_msgs::msg::AGVStatus::SharedPtr msg) {
+void CCS::updateAGV1Status(const ariac_msgs::msg::AGVStatus::SharedPtr msg) {
   float vel = msg->velocity;
   int location = msg->location;
-  ProcessAGVStatus(1, location, vel);
+  processAGVStatus(1, location, vel);
 }
 
 //=================================================================================================
-void CCS::StoreOrder(const ariac_msgs::msg::Order::SharedPtr msg) {
+void CCS::storeOrder(const ariac_msgs::msg::Order::SharedPtr msg) {
 
 
   // Create an order object and push it to the queue
@@ -384,7 +385,7 @@ void CCS::StoreOrder(const ariac_msgs::msg::Order::SharedPtr msg) {
 }
 
 //=================================================================================================
-void CCS::UpdateCompetitionState(
+void CCS::updateCompetitionState(
     const ariac_msgs::msg::CompetitionState::SharedPtr msg) {
   // Check the competition state and update the flag
   if (msg->competition_state == ariac_msgs::msg::CompetitionState::READY &&
@@ -409,7 +410,7 @@ void CCS::UpdateCompetitionState(
 //////////////////// Service Call Functions //////////////////
 
 //=================================================================================================
-bool CCS::StartCompetition() {
+bool CCS::startCompetition() {
   // Create the service name
   std::string srv_name = "/ariac/start_competition";
 
@@ -434,7 +435,7 @@ bool CCS::StartCompetition() {
 }
 
 //=================================================================================================
-bool CCS::EndCompetition() {
+bool CCS::endCompetition() {
   // Create the service name
   std::string srv_name = "/ariac/end_competition";
 
@@ -460,7 +461,7 @@ bool CCS::EndCompetition() {
 }
 
 //=================================================================================================
-bool CCS::LockAGV(int number) {
+bool CCS::lockAGV(int number) {
   if (number == 0) {
     return true;
   }
@@ -508,7 +509,7 @@ bool CCS::LockAGV(int number) {
 }
 
 //=================================================================================================
-void CCS::MoveAGV(int number, int destination) {
+void CCS::moveAGV(int number, int destination) {
   if (number == 0) {
     return;
   }
@@ -561,7 +562,7 @@ void CCS::MoveAGV(int number, int destination) {
 }
 
 //=================================================================================================
-bool CCS::SubmitOrder(std::string order_id) {
+bool CCS::submitOrder(std::string order_id) {
 
   RCLCPP_INFO_STREAM(this->get_logger(), "Submitting Order " << order_id);
   // Create the service name
@@ -592,7 +593,7 @@ bool CCS::SubmitOrder(std::string order_id) {
 
 
 //=================================================================================================
-OrderStatus CCS::PerformQualityCheck(std::string order_id) {
+OrderStatus CCS::performQualityCheck(std::string order_id) {
 
   RCLCPP_INFO_STREAM(this->get_logger(), PURPLE << "Quality Check Order " << order_id <<RESET);
   // Create the service name
@@ -657,7 +658,7 @@ void CCS::AGVResponseCallback(
 ///////////////////// Helper Functions //////////////////////////////
 
 //=================================================================================================
-std::vector<rwa5_group3::msg::RobotTask> CCS::CreateRobotTask(Order o){
+std::vector<rwa5_group3::msg::RobotTask> CCS::createRobotTask(Order o){
   // Create a vector to store the tasks
   std::vector<rwa5_group3::msg::RobotTask> tasks;
 
@@ -704,7 +705,7 @@ std::vector<rwa5_group3::msg::RobotTask> CCS::CreateRobotTask(Order o){
 }
 
 
-void CCS::ExecuteTasks(std::vector<rwa5_group3::msg::RobotTask> tasks, Order o){
+void CCS::executeTasks(std::vector<rwa5_group3::msg::RobotTask> tasks, Order o){
     
     RCLCPP_INFO_STREAM(this->get_logger(),CYAN<<"Order Execution "<< o.id <<RESET);
     rwa5_group3::msg::RobotTask prev_task;
@@ -764,7 +765,7 @@ void CCS::ExecuteTasks(std::vector<rwa5_group3::msg::RobotTask> tasks, Order o){
           // RCLCPP_INFO_STREAM(this->get_logger(),RED<<"Robot Status: OCCUPIED"<<RESET);
           
           
-         
+         bool insufficent_parts = false;
          if(task.task_type == rwa5_group3::msg::RobotTask::PART){
             // continue;
             bool part_found = false;
@@ -795,12 +796,14 @@ void CCS::ExecuteTasks(std::vector<rwa5_group3::msg::RobotTask> tasks, Order o){
                   available_parts.erase(part_to_remove);
               }
               else {
-                  // RCLCPP_INFO_STREAM(this->get_logger(), RED << "Part Not Found" << RESET);
-                  // RCLCPP_INFO_STREAM(this->get_logger(), RED << "Setting Robot Free" << RESET);
+                  RCLCPP_INFO_STREAM(this->get_logger(), RED << "Part Not Found" << RESET);
+                  RCLCPP_INFO_STREAM(this->get_logger(), RED << "Setting Robot Free" << RESET);
                   rwa5_group3::msg::RobotStatus robot_status;
                   robot_status.floor_robot = rwa5_group3::msg::RobotStatus::FREE;
                   robot_status_publisher_->publish(robot_status);
                   floor_robot_ = rwa5_group3::msg::RobotStatus::FREE;
+                  insufficent_parts = true;
+                  break;
               }
               
           }
@@ -843,20 +846,20 @@ void CCS::ExecuteTasks(std::vector<rwa5_group3::msg::RobotTask> tasks, Order o){
               }
          }
     }
+    if(!insufficent_parts){
     robot_task_publisher_->publish(task);
+    }
     RCLCPP_INFO_STREAM(this->get_logger(),CYAN<<"==========================================================="<<RESET);
     }
     std::this_thread::sleep_for(std::chrono::seconds(10));
     while (floor_robot_ == rwa5_group3::msg::RobotStatus::OCCUPIED || floor_robot_ == rwa5_group3::msg::RobotStatus::RETRY){
         // RCLCPP_INFO_STREAM(this->get_logger(),RED<< "Waiting for the robot to be free"<<RESET);
          }
-    if(o.priority == 1){
-        task_in_waiting_--;
-    }
+ 
 }
 
 //=================================================================================================
-void CCS::ProcessOrder(Order o){
+void CCS::processOrder(Order o){
 
     
     // Wait for 15 seconds
@@ -872,15 +875,15 @@ void CCS::ProcessOrder(Order o){
     // RCLCPP_INFO_STREAM(this->get_logger(), "Processing Priority Order " << o.id);
     // Create a vector to store the tasks
     std::vector<rwa5_group3::msg::RobotTask> tasks;
-    tasks = CreateRobotTask(o);
+    tasks = createRobotTask(o);
     // Execute the tasks
-    ExecuteTasks(tasks,o);
+    executeTasks(tasks,o);
 
     while(retry_count_ > 0){
         // RCLCPP_INFO_STREAM(this->get_logger(),RED<<"Waiting for the robot to be free"<<RESET);
     }
     order_in_waiting_--;
-    OrderStatus status = PerformQualityCheck(o.id);
+    OrderStatus status = performQualityCheck(o.id);
 
     if(status.all_passed){
       RCLCPP_INFO_STREAM(this->get_logger(),GREEN<<"Order "<<o.id<<" Ready to submit"<<RESET);
@@ -896,43 +899,16 @@ void CCS::ProcessOrder(Order o){
 
     std::this_thread::sleep_for(std::chrono::seconds(2));
     // Lock the AGV corresponding to the order
-    LockAGV(o.agv_number);
+    lockAGV(o.agv_number);
     // Move the AGV to the destination corresponding to the order
-    MoveAGV(o.agv_number,o.destination);
+    moveAGV(o.agv_number,o.destination);
 
-    
-
-    // while (priority_order_count_ > 0) {
-    //     // RCLCPP_INFO_STREAM(this->get_logger(), "Waiting for priority orders to be submitted" << std::to_string(priority_order_count_));
-    // }
-
-    // if(o.priority == 0){
-
-    //     RCLCPP_INFO_STREAM(this->get_logger(), "Processing Normal Order " << o.id);
-    //     // Create a vector to store the tasks
-    //     std::vector<rwa5_group3::msg::RobotTask> tasks;
-    //     tasks = CreateRobotTask(o);
-    //     // Execute the tasks
-    //     ExecuteTasks(tasks,o);
-        
-
-    //     RCLCPP_INFO_STREAM(this->get_logger(),GREEN<<"Order "<<o.id<<" Ready to submit"<<RESET);
-    //     RCLCPP_INFO_STREAM(this->get_logger(),CYAN<<"==========================================================="<<RESET);
-
-    //     std::this_thread::sleep_for(std::chrono::seconds(2));
-    //     // Lock the AGV corresponding to the order
-    //     LockAGV(o.agv_number);
-    //     // Move the AGV to the destination corresponding to the order
-    //     MoveAGV(o.agv_number,o.destination);
-    // }
-
-    
 
     
 }
 
 //=================================================================================================
-void CCS::SelectOrder(){
+void CCS::selectOrder(){
     // Check if the order queue is not empty
     if(!order_queue.empty()){
         // Get the top order from the queue (Highest priority order)
@@ -941,7 +917,7 @@ void CCS::SelectOrder(){
         order_queue.pop();
 
         // Create a bound function to process the each new order
-        auto boundFunction = std::bind(&CCS::ProcessOrder, this, o);
+        auto boundFunction = std::bind(&CCS::processOrder, this, o);
         
         // Process the order on a new thread
         std::future<void> result = std::async(std::launch::async, boundFunction);
@@ -957,7 +933,7 @@ void CCS::SelectOrder(){
             RCLCPP_INFO_STREAM(this->get_logger(),BLUE<<"Orders Announced: " <<order_count_<<RESET);
             RCLCPP_INFO_STREAM(this->get_logger(),GREEN<<"Orders Submitted: " << submit_count_<<RESET);
             // End the competition
-            EndCompetition(); 
+            endCompetition(); 
         }
     }
 }
