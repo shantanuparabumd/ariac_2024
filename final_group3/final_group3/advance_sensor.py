@@ -15,7 +15,7 @@ from cv_bridge import CvBridge
 import cv2
 
 # Custom functions and messages
-from rwa5_group3.pre_processing import canny_edge_detection, get_color
+from final_group3.pre_processing import canny_edge_detection, get_color
 from ariac_msgs.msg import Part,PartPose,AdvancedLogicalCameraImage, BasicLogicalCameraImage
 
 # OS module 
@@ -70,7 +70,7 @@ class Camera_subscriber(Node):
         super().__init__(node_name)
             
         # Path to the trained model
-        model_path = os.path.join(get_package_share_directory('rwa5_group3'), 'scripts', 'best.pt')
+        model_path = os.path.join(get_package_share_directory('final_group3'), 'scripts', 'best.pt')
         
         # Load the YOLO model
         self.model = YOLO(model_path)
@@ -281,6 +281,7 @@ class Camera_subscriber(Node):
 
             # Loop over items in both the pose dictionary and parts dictionary simultaneously
             for (pose_key, pose_value), (part_key, part_value) in zip(self.pose_dict_left.items(), self.parts_dict_left.items()):
+                # print(f"{part_value[1]} {part_value[0]} at {pose_key}")
                 # New part msg using Part message type
                 part = Part()
 

@@ -23,7 +23,7 @@ def launch_setup(context, *args, **kwargs):
     moveit_package = get_package_share_directory('ariac_moveit_config')
     
     demo_cpp = Node(
-        package="rwa5_group3",
+        package="final_group3",
         executable="robot_manager",
         output="screen",
         parameters=generate_parameters(),

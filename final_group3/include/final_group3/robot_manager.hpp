@@ -5,10 +5,10 @@
 #include <moveit/move_group_interface/move_group_interface.h>
 #include <moveit/planning_scene_interface/planning_scene_interface.h>
 #include <moveit/trajectory_processing/time_optimal_trajectory_generation.h>
-#include <rwa5_group3/msg/robot_task.hpp>
-#include <rwa5_group3/msg/robot_status.hpp>
+#include <final_group3/msg/robot_task.hpp>
+#include <final_group3/msg/robot_status.hpp>
 #include <geometry_msgs/msg/pose.hpp>
-#include "rwa5_group3/utils.hpp"
+#include "final_group3/utils.hpp"
 
 #include <ariac_msgs/srv/perform_quality_check.hpp>
 #include <ariac_msgs/msg/quality_issue.hpp>
@@ -38,7 +38,7 @@
 
 #include <ament_index_cpp/get_package_share_directory.hpp>
 
-#include "../include/rwa5_group3/orders.hpp"
+#include "../include/final_group3/orders.hpp"
 
 #include <unistd.h>
 
@@ -95,7 +95,7 @@ class RobotManager : public rclcpp::Node
          * Get the new task tobe executed by the robots
          * @param msg 
          */
-        void robotTaskCallback(const rwa5_group3::msg::RobotTask::SharedPtr msg);
+        void robotTaskCallback(const final_group3::msg::RobotTask::SharedPtr msg);
 
 
         /**
@@ -265,9 +265,9 @@ class RobotManager : public rclcpp::Node
         // Callback group for storing the orders
         rclcpp::CallbackGroup::SharedPtr gripper_group_; 
 
-        rclcpp::Publisher<rwa5_group3::msg::RobotStatus>::SharedPtr robot_status_publisher_;
+        rclcpp::Publisher<final_group3::msg::RobotStatus>::SharedPtr robot_status_publisher_;
 
-        rclcpp::Subscription<rwa5_group3::msg::RobotTask>::SharedPtr robot_task_subscription_;
+        rclcpp::Subscription<final_group3::msg::RobotTask>::SharedPtr robot_task_subscription_;
         
         rclcpp::Subscription<ariac_msgs::msg::VacuumGripperState>::SharedPtr floor_gripper_state_sub_;
 
@@ -282,7 +282,7 @@ class RobotManager : public rclcpp::Node
 
         std::thread executor_thread_;
 
-        rwa5_group3::msg::RobotTask current_task_;
+        final_group3::msg::RobotTask current_task_;
 
         int current_grip = 0;
 

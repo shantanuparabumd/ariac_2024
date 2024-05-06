@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>rwa5_group3</name>
+  <name>final_group3</name>
   <version>0.0.0</version>
-  <description>Package for RWA 4</description>
+  <description>Package for final</description>
   <maintainer email="sparab@umd.edu">Shantanu</maintainer>
   <maintainer email="akasparm@umd.edu">Akash</maintainer>
   <maintainer email="nmarne@umd.edu">Neha</maintainer>

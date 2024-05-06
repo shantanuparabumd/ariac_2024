@@ -3,7 +3,7 @@
 import rclpy 
 
 # Importing Camera_subscriber from advance_sensor.py
-from rwa5_group3.advance_sensor import Camera_subscriber
+from final_group3.advance_sensor import Camera_subscriber
 
 # main function
 def main():

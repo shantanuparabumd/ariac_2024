@@ -19,7 +19,7 @@ color_ranges = {
         'upper': (145, 255, 220)
     },
     'orange': {
-        'lower': (13, 223, 218),
+        'lower': (13, 195, 210),
         'upper': (18, 255, 255)
     }
 }
@@ -78,5 +78,5 @@ def get_color(image, top, left, bottom, right, part_name):
     color = (center_pixel[0], center_pixel[1], center_pixel[2])
     color_name = compare_color(color)
     
-    # print(f"Detected Part Name: {part_name}, Color: {color_name}, Value: {color} at {top},{left}")
+    print(f"Detected Part Name: {part_name}, Color: {color_name}, Value: {color} at {top},{left}")
     return color_name

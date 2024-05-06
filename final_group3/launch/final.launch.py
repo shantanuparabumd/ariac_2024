@@ -10,13 +10,13 @@ from launch.actions import TimerAction
 def generate_launch_description():
 
     sensor_manager = Node(
-        package='rwa5_group3',
+        package='final_group3',
         executable='sensor_manager',
         output='screen'
     )
     
     ccs_manager = Node(
-        package='rwa5_group3',
+        package='final_group3',
         executable='ccs_manager',
         output='screen'
     )

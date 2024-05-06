@@ -10,19 +10,19 @@ def generate_launch_description():
 
 
     yolo_sensor_interface = Node(
-        package='rwa5_group3',
+        package='final_group3',
         executable='advance_sensor_interface.py',
         output='screen'
     )
     
     sensor_manager = Node(
-        package='rwa5_group3',
+        package='final_group3',
         executable='sensor_manager_bonus',
         output='screen'
     )
     
     ccs_manager = Node(
-        package='rwa5_group3',
+        package='final_group3',
         executable='ccs_manager',
         output='screen'
     )

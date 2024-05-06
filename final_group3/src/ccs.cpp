@@ -10,7 +10,7 @@
  * @copyright Copyright (c) 2024
  *
  */
-#include "rwa5_group3/ccs.hpp"
+#include "final_group3/ccs.hpp"
 #include <cmath>
 #include <string>
 
@@ -90,13 +90,13 @@ CCS::CCS(std::string node_name) : Node(node_name) {
       "/rwa_group3/detected_parts", qos_profile, std::bind(&CCS::updateSensorReading, this, std::placeholders::_1));
 
   // Robot Task Publisher
-  robot_task_publisher_ = this->create_publisher<rwa5_group3::msg::RobotTask>(
+  robot_task_publisher_ = this->create_publisher<final_group3::msg::RobotTask>(
       "robot_task", 10);
 
-  robot_status_publisher_ = this->create_publisher<rwa5_group3::msg::RobotStatus>(
+  robot_status_publisher_ = this->create_publisher<final_group3::msg::RobotStatus>(
       "robot_status", 10);
 
-  robot_status_subscriber_ = this->create_subscription<rwa5_group3::msg::RobotStatus>(
+  robot_status_subscriber_ = this->create_subscription<final_group3::msg::RobotStatus>(
       "robot_status", 10,
       std::bind(&CCS::updateRobotStatus, this, std::placeholders::_1),
       options);
@@ -119,17 +119,17 @@ CCS::CCS(std::string node_name) : Node(node_name) {
 
 
 //=================================================================================================
-void CCS::updateRobotStatus(const rwa5_group3::msg::RobotStatus::SharedPtr msg) {
+void CCS::updateRobotStatus(const final_group3::msg::RobotStatus::SharedPtr msg) {
   // RCLCPP_INFO_STREAM(this->get_logger(), "Robot Status Updated");
   floor_robot_ = msg->floor_robot;
   ceiling_robot_ = msg->ceiling_robot;
-  if(floor_robot_ == rwa5_group3::msg::RobotStatus::FREE){
+  if(floor_robot_ == final_group3::msg::RobotStatus::FREE){
     // RCLCPP_INFO_STREAM(this->get_logger(), PURPLE<< "Floor Robot Status: FREE" << RESET);
     // task_in_waiting_--;
     
-  } else if(floor_robot_ == rwa5_group3::msg::RobotStatus::RETRY){
+  } else if(floor_robot_ == final_group3::msg::RobotStatus::RETRY){
     // RCLCPP_INFO_STREAM(this->get_logger(), PURPLE<< "Floor Robot Status: RETRY" << RESET);
-    rwa5_group3::msg::RobotTask task = msg->robot_task;
+    final_group3::msg::RobotTask task = msg->robot_task;
     retry_count_++;
 
     // Create a bound function to process the each new order
@@ -148,12 +148,12 @@ void CCS::updateRobotStatus(const rwa5_group3::msg::RobotStatus::SharedPtr msg) 
 }
 
 
-void CCS::retry(rwa5_group3::msg::RobotTask task){
+void CCS::retry(final_group3::msg::RobotTask task){
 
-  rwa5_group3::msg::RobotStatus robot_status;
-  robot_status.floor_robot = rwa5_group3::msg::RobotStatus::OCCUPIED;
+  final_group3::msg::RobotStatus robot_status;
+  robot_status.floor_robot = final_group3::msg::RobotStatus::OCCUPIED;
   robot_status_publisher_->publish(robot_status);
-  floor_robot_ = rwa5_group3::msg::RobotStatus::OCCUPIED;
+  floor_robot_ = final_group3::msg::RobotStatus::OCCUPIED;
   bool part_found = false;
   while(!part_found){
               auto part_to_remove = available_parts.begin();
@@ -183,10 +183,10 @@ void CCS::retry(rwa5_group3::msg::RobotTask task){
               else {
                   RCLCPP_INFO_STREAM(this->get_logger(), RED << "Part Not Found" << RESET);
                   RCLCPP_INFO_STREAM(this->get_logger(), RED << "Setting Robot Free" << RESET);
-                  rwa5_group3::msg::RobotStatus robot_status;
-                  robot_status.floor_robot = rwa5_group3::msg::RobotStatus::FREE;
+                  final_group3::msg::RobotStatus robot_status;
+                  robot_status.floor_robot = final_group3::msg::RobotStatus::FREE;
                   robot_status_publisher_->publish(robot_status);
-                  floor_robot_ = rwa5_group3::msg::RobotStatus::FREE;
+                  floor_robot_ = final_group3::msg::RobotStatus::FREE;
                   break;
               }
   }
@@ -194,7 +194,7 @@ void CCS::retry(rwa5_group3::msg::RobotTask task){
 
   RCLCPP_INFO_STREAM(this->get_logger(),CYAN<<"Sent a Retry Task to Robto"<<RESET);
   std::this_thread::sleep_for(std::chrono::seconds(10));  
-  while (floor_robot_ == rwa5_group3::msg::RobotStatus::OCCUPIED || floor_robot_ == rwa5_group3::msg::RobotStatus::RETRY){
+  while (floor_robot_ == final_group3::msg::RobotStatus::OCCUPIED || floor_robot_ == final_group3::msg::RobotStatus::RETRY){
         // RCLCPP_INFO_STREAM(this->get_logger(),RED<< "Waiting for the robot to be free"<<RESET);
          }
   retry_count_ --;
@@ -658,30 +658,30 @@ void CCS::AGVResponseCallback(
 ///////////////////// Helper Functions //////////////////////////////
 
 //=================================================================================================
-std::vector<rwa5_group3::msg::RobotTask> CCS::createRobotTask(Order o){
+std::vector<final_group3::msg::RobotTask> CCS::createRobotTask(Order o){
   // Create a vector to store the tasks
-  std::vector<rwa5_group3::msg::RobotTask> tasks;
+  std::vector<final_group3::msg::RobotTask> tasks;
 
   if(o.type == ariac_msgs::msg::Order::KITTING){
 
       // Create a task object
-      rwa5_group3::msg::RobotTask tray_task;
+      final_group3::msg::RobotTask tray_task;
       // Get AGV Number
       tray_task.agv_number = o.agv_number;
       // Get Tray ID
       tray_task.tray_id = o.kitting_task.tray_id;
       // Set the task type
-      tray_task.task_type = rwa5_group3::msg::RobotTask::TRAY;
+      tray_task.task_type = final_group3::msg::RobotTask::TRAY;
       // Push the task to the vector
       tasks.push_back(tray_task);
 
     for (auto part : o.kitting_task.parts) {
 
         // Create a task object
-        rwa5_group3::msg::RobotTask part_task;
+        final_group3::msg::RobotTask part_task;
 
         // Set the task type
-        part_task.task_type = rwa5_group3::msg::RobotTask::PART;
+        part_task.task_type = final_group3::msg::RobotTask::PART;
 
         // Get order id
         part_task.order_id = o.id;
@@ -705,10 +705,10 @@ std::vector<rwa5_group3::msg::RobotTask> CCS::createRobotTask(Order o){
 }
 
 
-void CCS::executeTasks(std::vector<rwa5_group3::msg::RobotTask> tasks, Order o){
+void CCS::executeTasks(std::vector<final_group3::msg::RobotTask> tasks, Order o){
     
     RCLCPP_INFO_STREAM(this->get_logger(),CYAN<<"Order Execution "<< o.id <<RESET);
-    rwa5_group3::msg::RobotTask prev_task;
+    final_group3::msg::RobotTask prev_task;
 
     for (auto task : tasks) {
           start:
@@ -723,19 +723,19 @@ void CCS::executeTasks(std::vector<rwa5_group3::msg::RobotTask> tasks, Order o){
             }
           }
           
-          if (floor_robot_ == rwa5_group3::msg::RobotStatus::RETRY){
+          if (floor_robot_ == final_group3::msg::RobotStatus::RETRY){
               RCLCPP_INFO_STREAM(this->get_logger(),CYAN<<"Retry Count "<<retry_count_<<RESET);
               RCLCPP_INFO_STREAM(this->get_logger(),RED<<"Robot is in Retry Mode"<<RESET);
-              while (floor_robot_ == rwa5_group3::msg::RobotStatus::RETRY){
+              while (floor_robot_ == final_group3::msg::RobotStatus::RETRY){
 
               }
           }
           
           RCLCPP_INFO_STREAM(this->get_logger(),ORANGE<<"Robot Status While waiting Task Execution "<<floor_robot_<<RESET);
           
-          if(floor_robot_ == rwa5_group3::msg::RobotStatus::OCCUPIED){
+          if(floor_robot_ == final_group3::msg::RobotStatus::OCCUPIED){
             RCLCPP_INFO_STREAM(this->get_logger(),RED<<"Robot is Occupied"<<RESET);
-            while (floor_robot_ == rwa5_group3::msg::RobotStatus::OCCUPIED){
+            while (floor_robot_ == final_group3::msg::RobotStatus::OCCUPIED){
 
             }
             if(o.priority==0){
@@ -744,7 +744,7 @@ void CCS::executeTasks(std::vector<rwa5_group3::msg::RobotTask> tasks, Order o){
               RCLCPP_INFO_STREAM(this->get_logger(),CYAN<<"Restarting Task"<<RESET);
               goto start;
             }
-            if (floor_robot_ == rwa5_group3::msg::RobotStatus::RETRY){
+            if (floor_robot_ == final_group3::msg::RobotStatus::RETRY){
               RCLCPP_INFO_STREAM(this->get_logger(),CYAN<<"A retry task was added to the queue while waiting  "<<retry_count_<<RESET);
               RCLCPP_INFO_STREAM(this->get_logger(),CYAN<<"Restarting Task"<<RESET);
               goto start;
@@ -758,15 +758,15 @@ void CCS::executeTasks(std::vector<rwa5_group3::msg::RobotTask> tasks, Order o){
           }
           
          
-          rwa5_group3::msg::RobotStatus robot_status;
-          robot_status.floor_robot = rwa5_group3::msg::RobotStatus::OCCUPIED;
+          final_group3::msg::RobotStatus robot_status;
+          robot_status.floor_robot = final_group3::msg::RobotStatus::OCCUPIED;
           robot_status_publisher_->publish(robot_status);
-          floor_robot_ = rwa5_group3::msg::RobotStatus::OCCUPIED;
+          floor_robot_ = final_group3::msg::RobotStatus::OCCUPIED;
           // RCLCPP_INFO_STREAM(this->get_logger(),RED<<"Robot Status: OCCUPIED"<<RESET);
           
           
          bool insufficent_parts = false;
-         if(task.task_type == rwa5_group3::msg::RobotTask::PART){
+         if(task.task_type == final_group3::msg::RobotTask::PART){
             // continue;
             bool part_found = false;
 
@@ -798,10 +798,10 @@ void CCS::executeTasks(std::vector<rwa5_group3::msg::RobotTask> tasks, Order o){
               else {
                   RCLCPP_INFO_STREAM(this->get_logger(), RED << "Part Not Found" << RESET);
                   RCLCPP_INFO_STREAM(this->get_logger(), RED << "Setting Robot Free" << RESET);
-                  rwa5_group3::msg::RobotStatus robot_status;
-                  robot_status.floor_robot = rwa5_group3::msg::RobotStatus::FREE;
+                  final_group3::msg::RobotStatus robot_status;
+                  robot_status.floor_robot = final_group3::msg::RobotStatus::FREE;
                   robot_status_publisher_->publish(robot_status);
-                  floor_robot_ = rwa5_group3::msg::RobotStatus::FREE;
+                  floor_robot_ = final_group3::msg::RobotStatus::FREE;
                   insufficent_parts = true;
                   break;
               }
@@ -809,7 +809,7 @@ void CCS::executeTasks(std::vector<rwa5_group3::msg::RobotTask> tasks, Order o){
           }
           
          }
-         else if(task.task_type == rwa5_group3::msg::RobotTask::TRAY){
+         else if(task.task_type == final_group3::msg::RobotTask::TRAY){
             
             bool tray_found = false;
             while(!tray_found){
@@ -839,10 +839,10 @@ void CCS::executeTasks(std::vector<rwa5_group3::msg::RobotTask> tasks, Order o){
               else {
                   RCLCPP_INFO_STREAM(this->get_logger(), RED << "Part Not Found" << RESET);
                   RCLCPP_INFO_STREAM(this->get_logger(), RED << "Setting Robot Free" << RESET);
-                  rwa5_group3::msg::RobotStatus robot_status;
-                  robot_status.floor_robot = rwa5_group3::msg::RobotStatus::FREE;
+                  final_group3::msg::RobotStatus robot_status;
+                  robot_status.floor_robot = final_group3::msg::RobotStatus::FREE;
                   robot_status_publisher_->publish(robot_status);
-                  floor_robot_ = rwa5_group3::msg::RobotStatus::FREE;
+                  floor_robot_ = final_group3::msg::RobotStatus::FREE;
               }
          }
     }
@@ -852,7 +852,7 @@ void CCS::executeTasks(std::vector<rwa5_group3::msg::RobotTask> tasks, Order o){
     RCLCPP_INFO_STREAM(this->get_logger(),CYAN<<"==========================================================="<<RESET);
     }
     std::this_thread::sleep_for(std::chrono::seconds(10));
-    while (floor_robot_ == rwa5_group3::msg::RobotStatus::OCCUPIED || floor_robot_ == rwa5_group3::msg::RobotStatus::RETRY){
+    while (floor_robot_ == final_group3::msg::RobotStatus::OCCUPIED || floor_robot_ == final_group3::msg::RobotStatus::RETRY){
         // RCLCPP_INFO_STREAM(this->get_logger(),RED<< "Waiting for the robot to be free"<<RESET);
          }
  
@@ -874,7 +874,7 @@ void CCS::processOrder(Order o){
    
     // RCLCPP_INFO_STREAM(this->get_logger(), "Processing Priority Order " << o.id);
     // Create a vector to store the tasks
-    std::vector<rwa5_group3::msg::RobotTask> tasks;
+    std::vector<final_group3::msg::RobotTask> tasks;
     tasks = createRobotTask(o);
     // Execute the tasks
     executeTasks(tasks,o);

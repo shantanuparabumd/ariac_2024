@@ -1,4 +1,4 @@
-#include "rwa5_group3/robot_manager.hpp"
+#include "final_group3/robot_manager.hpp"
 #include <string>
 #include <unistd.h>
 
@@ -42,11 +42,11 @@ RobotManager::RobotManager() : Node("robot_manager"),
 
 
     // Publihser to publish robot status
-    robot_status_publisher_ = this->create_publisher<rwa5_group3::msg::RobotStatus>(
+    robot_status_publisher_ = this->create_publisher<final_group3::msg::RobotStatus>(
       "robot_status", 10);
 
     // Subscriber to get robot task
-    robot_task_subscription_ = this->create_subscription<rwa5_group3::msg::RobotTask>(
+    robot_task_subscription_ = this->create_subscription<final_group3::msg::RobotTask>(
         "robot_task", 10, std::bind(&RobotManager::robotTaskCallback, this, std::placeholders::_1));
 
     rclcpp::SubscriptionOptions options;
@@ -72,7 +72,7 @@ RobotManager::~RobotManager()
 
 
 //=====================================================================================================================
-void RobotManager::robotTaskCallback(const rwa5_group3::msg::RobotTask::SharedPtr msg)
+void RobotManager::robotTaskCallback(const final_group3::msg::RobotTask::SharedPtr msg)
 {   
   current_task_ = *msg;
 
@@ -80,7 +80,7 @@ void RobotManager::robotTaskCallback(const rwa5_group3::msg::RobotTask::SharedPt
 
   retry:
   // Check if the task is to pick up a tray
-  if(msg->task_type == rwa5_group3::msg::RobotTask::TRAY){
+  if(msg->task_type == final_group3::msg::RobotTask::TRAY){
     
 
     RCLCPP_INFO(this->get_logger(), "Picking Up Tray");
@@ -95,27 +95,27 @@ void RobotManager::robotTaskCallback(const rwa5_group3::msg::RobotTask::SharedPt
     }
     else{
       RCLCPP_INFO(this->get_logger(), "Tray Placed Successfully");
-      rwa5_group3::msg::RobotStatus robot_status_msg;
-      robot_status_msg.floor_robot = rwa5_group3::msg::RobotStatus::FREE;
+      final_group3::msg::RobotStatus robot_status_msg;
+      robot_status_msg.floor_robot = final_group3::msg::RobotStatus::FREE;
       robot_status_publisher_->publish(robot_status_msg);
     }
   }
 
   // Check if the task is to pick up a part
-  else if(msg->task_type == rwa5_group3::msg::RobotTask::PART){
+  else if(msg->task_type == final_group3::msg::RobotTask::PART){
     RCLCPP_INFO(this->get_logger(), "Picking Up Part");
     bool success = floorRobotPickPart(msg->pose);
     if (!success){
       RCLCPP_ERROR_STREAM(get_logger(), RED<<"Get a New Part"<<RESET);
-      rwa5_group3::msg::RobotStatus robot_status_msg;
-      robot_status_msg.floor_robot = rwa5_group3::msg::RobotStatus::RETRY;
+      final_group3::msg::RobotStatus robot_status_msg;
+      robot_status_msg.floor_robot = final_group3::msg::RobotStatus::RETRY;
       robot_status_msg.robot_task = current_task_;
       robot_status_publisher_->publish(robot_status_msg);
     }
     else{
       // Set the robot status to free    
-      rwa5_group3::msg::RobotStatus robot_status_msg;
-      robot_status_msg.floor_robot = rwa5_group3::msg::RobotStatus::FREE;
+      final_group3::msg::RobotStatus robot_status_msg;
+      robot_status_msg.floor_robot = final_group3::msg::RobotStatus::FREE;
       robot_status_publisher_->publish(robot_status_msg);
     }
   }
@@ -372,14 +372,19 @@ bool RobotManager::floorRobotPickPart(geometry_msgs::msg::Pose pose)
     
     floor_robot_->detachObject(part_name);
 
+
     pick_and_place = false;
 
     if(flag ==1){
+      std::vector<std::string> part_names;
+      part_names.push_back(part_name);
+      // Remove discard part from planning scene
+      planning_scene_.removeCollisionObjects(part_names);
       return false;
     }
     RCLCPP_INFO_STREAM(get_logger(), RED<<"Part placed on AGV"<<RESET);
-    rwa5_group3::msg::RobotStatus robot_status_msg;
-    robot_status_msg.floor_robot = rwa5_group3::msg::RobotStatus::FREE;
+    final_group3::msg::RobotStatus robot_status_msg;
+    robot_status_msg.floor_robot = final_group3::msg::RobotStatus::FREE;
     robot_status_publisher_->publish(robot_status_msg);
     return true;
     
@@ -745,7 +750,7 @@ void RobotManager::addSingleModelToPlanningScene(
   shapes::ShapeMsg mesh_msg;
 
   std::string package_share_directory =
-      ament_index_cpp::get_package_share_directory("rwa5_group3");
+      ament_index_cpp::get_package_share_directory("final_group3");
   std::stringstream path;
   path << "file://" << package_share_directory << "/meshes/" << mesh_file;
   std::string model_path = path.str();

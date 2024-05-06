@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(rwa5_group3)
+project(final_group3)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
@@ -124,8 +124,8 @@ ament_python_install_package(${PROJECT_NAME})
 install(
   PROGRAMS
   scripts/advance_sensor_interface.py
-  launch/rwa5.launch.py
-  launch/rwa5_bonus.launch.py
+  launch/final.launch.py
+  launch/final_bonus.launch.py
   DESTINATION lib/${PROJECT_NAME}
 )
 

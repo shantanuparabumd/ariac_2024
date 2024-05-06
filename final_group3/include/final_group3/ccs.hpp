@@ -20,8 +20,8 @@
 #include <ariac_msgs/srv/move_agv.hpp>
 #include <ariac_msgs/srv/submit_order.hpp>
 #include <ariac_msgs/srv/get_pre_assembly_poses.hpp>
-#include <rwa5_group3/msg/robot_task.hpp>
-#include <rwa5_group3/msg/robot_status.hpp>
+#include <final_group3/msg/robot_task.hpp>
+#include <final_group3/msg/robot_status.hpp>
 
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 #include <geometry_msgs/msg/quaternion.hpp>
@@ -31,8 +31,8 @@
 #include <rclcpp/rclcpp.hpp>  // Include the ROS2 C++ Library
 #include <std_srvs/srv/trigger.hpp>
 
-#include "../include/rwa5_group3/orders.hpp"
-#include "rwa5_group3/utils.hpp"
+#include "../include/final_group3/orders.hpp"
+#include "final_group3/utils.hpp"
 
 #include <queue>
 #include <future>
@@ -93,7 +93,7 @@ class CCS : public rclcpp::Node {
   
   void updateSensorReading(ariac_msgs::msg::AdvancedLogicalCameraImage::SharedPtr msg);
   
-  void updateRobotStatus(const rwa5_group3::msg::RobotStatus::SharedPtr msg);
+  void updateRobotStatus(const final_group3::msg::RobotStatus::SharedPtr msg);
 
   /**
    * @brief Call back function for the order announcement
@@ -212,16 +212,16 @@ class CCS : public rclcpp::Node {
    * @brief Create a Robot Task object
    * Decomposes an order into a vector of RobotTask objects for each parts
    * @param o 
-   * @return std::vector<rwa5_group3::msg::RobotTask> 
+   * @return std::vector<final_group3::msg::RobotTask> 
    */
-  std::vector<rwa5_group3::msg::RobotTask> createRobotTask(Order o);
+  std::vector<final_group3::msg::RobotTask> createRobotTask(Order o);
 
   /**
    * @brief Execute the tasks
    * Given a list of tasks, assigns the task to available robot
    * @param tasks 
    */
-  void executeTasks(std::vector<rwa5_group3::msg::RobotTask> tasks, Order o);
+  void executeTasks(std::vector<final_group3::msg::RobotTask> tasks, Order o);
 
   /**
    * @brief Process the order
@@ -254,7 +254,7 @@ class CCS : public rclcpp::Node {
    * 
    * @param task 
    */
-  void retry(rwa5_group3::msg::RobotTask task);
+  void retry(final_group3::msg::RobotTask task);
 
  private:
 
@@ -293,9 +293,9 @@ class CCS : public rclcpp::Node {
   rclcpp::CallbackGroup::SharedPtr agv_status_group_;
 
   ///////////// Publisher //////////////
-  rclcpp::Publisher<rwa5_group3::msg::RobotTask>::SharedPtr robot_task_publisher_;
+  rclcpp::Publisher<final_group3::msg::RobotTask>::SharedPtr robot_task_publisher_;
 
-  rclcpp::Publisher<rwa5_group3::msg::RobotStatus>::SharedPtr robot_status_publisher_;
+  rclcpp::Publisher<final_group3::msg::RobotStatus>::SharedPtr robot_status_publisher_;
 
   ///////////// Subscribers //////////////
 
@@ -319,7 +319,7 @@ class CCS : public rclcpp::Node {
   rclcpp::Subscription<ariac_msgs::msg::AGVStatus>::SharedPtr agv4_subcriber_;
 
   // Subscriber for robot status
-  rclcpp::Subscription<rwa5_group3::msg::RobotStatus>::SharedPtr robot_status_subscriber_;
+  rclcpp::Subscription<final_group3::msg::RobotStatus>::SharedPtr robot_status_subscriber_;
 
   rclcpp::Subscription<ariac_msgs::msg::AdvancedLogicalCameraImage>::SharedPtr sensor_subscriber_;
   
@@ -332,8 +332,8 @@ class CCS : public rclcpp::Node {
   std::vector<bool> agv_flag_ = {false, false, false, false};
 
   // Flags to keep track of the robot status
-  int floor_robot_ = rwa5_group3::msg::RobotStatus::FREE;
-  int ceiling_robot_ = rwa5_group3::msg::RobotStatus::FREE;
+  int floor_robot_ = final_group3::msg::RobotStatus::FREE;
+  int ceiling_robot_ = final_group3::msg::RobotStatus::FREE;
 
 
   // Flag to warm up
