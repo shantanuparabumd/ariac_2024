@@ -1,6 +1,6 @@
 # ENPM663 - BUILDING A MANUFACTURING ROBOTIC SOFTWARE SYSTEM 
 
-## RWA5 - Group 3
+## Final - Group 3
 ### Team
 
 |Name|UID|Github ID| Email ID
@@ -36,18 +36,18 @@ source install/setup.bash
 
 Start the ariac environment with advance logical cameras
 ```sh
-ros2 launch ariac_gazebo ariac.launch.py competitor_pkg:=rwa5_group3 sensor_config:=sensors trial_name:=rwa5_spring2024
+ros2 launch ariac_gazebo ariac.launch.py competitor_pkg:=final_group3 sensor_config:=sensors trial_name:=final_spring2024
 ```
 
 Start Moveit and Robot Manager
 ```sh
-ros2 launch rwa5_group3 robot_manager.launch.py
+ros2 launch final_group3 robot_manager.launch.py
 ```
 
 After all the parts and trays are loaded run the below command (Ideally wait for 5 seconds to spawn all parts and trays)
 
 ```sh
-ros2 launch rwa5_group3 rwa5.launch.py
+ros2 launch final_group3 final.launch.py
 ```
 
 ## Bonus Testing
@@ -60,19 +60,19 @@ ros2 launch rwa5_group3 rwa5.launch.py
 
 Start the ariac environment
 ```sh
-ros2 launch ariac_gazebo ariac.launch.py competitor_pkg:=rwa5_group3 sensor_config:=sensors_bonus trial_name:=rwa5_spring2024
+ros2 launch ariac_gazebo ariac.launch.py competitor_pkg:=final_group3 sensor_config:=sensors_bonus trial_name:=final_spring2024
 ```
 
 Start Moveit and Robot Manager
 ```sh
-ros2 launch rwa5_group3 robot_manager.launch.py
+ros2 launch final_group3 robot_manager.launch.py
 ```
 
 
 After all the parts and trays are loaded run the below command (Ideally wait for 5 seconds to spawn all parts and trays)
 
 ```sh
-ros2 launch rwa5_group3 rwa5_bonus.launch.py
+ros2 launch final_group3 final_bonus.launch.py
 ```
 
 
