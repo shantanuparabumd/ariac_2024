@@ -181,7 +181,7 @@ void CCS::retry(final_group3::msg::RobotTask task){
                   available_parts.erase(part_to_remove);
               }
               else {
-                  RCLCPP_INFO_STREAM(this->get_logger(), RED << "Part Not Found" << RESET);
+                  RCLCPP_INFO_STREAM(this->get_logger(), text[task.part.color]<<">> " << color[task.part.color] <<" "<<type[task.part.type] << "Not Found" << RESET);
                   RCLCPP_INFO_STREAM(this->get_logger(), RED << "Setting Robot Free" << RESET);
                   final_group3::msg::RobotStatus robot_status;
                   robot_status.floor_robot = final_group3::msg::RobotStatus::FREE;
@@ -796,7 +796,7 @@ void CCS::executeTasks(std::vector<final_group3::msg::RobotTask> tasks, Order o)
                   available_parts.erase(part_to_remove);
               }
               else {
-                  RCLCPP_INFO_STREAM(this->get_logger(), RED << "Part Not Found" << RESET);
+                  RCLCPP_INFO_STREAM(this->get_logger(), text[task.part.color]<<">> " << color[task.part.color] <<" "<<type[task.part.type] << "Not Found" << RESET);
                   RCLCPP_INFO_STREAM(this->get_logger(), RED << "Setting Robot Free" << RESET);
                   final_group3::msg::RobotStatus robot_status;
                   robot_status.floor_robot = final_group3::msg::RobotStatus::FREE;

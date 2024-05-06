@@ -153,7 +153,7 @@ class Camera_subscriber(Node):
                 c = box.cls
                 color = get_color(image, int(b[0]), int(b[1]), int(b[2]), int(b[3]),self.model.names[int(c)])
                 cv2.rectangle(image, (int(b[0]), int(b[1])), (int(b[2]), int(b[3])), (0,0,0), 2)  # Draw bounding box on image
-                
+                new_x, new_y = None, None
                 x, y = int((b[0] + b[2]) / 2), int((b[1] + b[3]) / 2)
                 for x_key, x_value in x_map.items():
                     if x_value[0] <= x <= x_value[1]:
@@ -163,8 +163,9 @@ class Camera_subscriber(Node):
                     if y_value[0] <= y <= y_value[1]:
                         new_y = y_key
                         break
-                new_key = (new_x, new_y)
-                self.parts_dict_left[new_key] = (self.model.names[int(c)], color)
+                if new_x is not None and new_y is not None:
+                    new_key = (new_x, new_y)
+                    self.parts_dict_left[new_key] = (self.model.names[int(c)], color)
                             
         img_msg = self.bridge.cv2_to_imgmsg(image, encoding="rgb8")  
         # Sorting the cooridinates rowwise to match ids with basic logical camera message poses
@@ -203,7 +204,7 @@ class Camera_subscriber(Node):
                 c = box.cls
                 color = get_color(image, int(b[0]), int(b[1]), int(b[2]), int(b[3]),self.model.names[int(c)])
                 cv2.rectangle(image, (int(b[0]), int(b[1])), (int(b[2]), int(b[3])), (0,0,0), 2)  # Draw bounding box on image
-                
+                new_x, new_y = None, None
                 x, y = int((b[0] + b[2]) / 2), int((b[1] + b[3]) / 2)
                 for x_key, x_value in x_map.items():
                     if x_value[0] <= x <= x_value[1]:
@@ -213,8 +214,9 @@ class Camera_subscriber(Node):
                     if y_value[0] <= y <= y_value[1]:
                         new_y = y_key
                         break
-                new_key = (new_x, new_y)
-                self.parts_dict_right[new_key] = (self.model.names[int(c)], color)
+                if new_x is not None and new_y is not None:
+                    new_key = (new_x, new_y)
+                    self.parts_dict_right[new_key] = (self.model.names[int(c)], color)
                             
         img_msg = self.bridge.cv2_to_imgmsg(image, encoding="rgb8")  
         

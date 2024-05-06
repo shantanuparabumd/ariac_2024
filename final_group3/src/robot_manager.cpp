@@ -584,7 +584,7 @@ bool RobotManager::movePartToQuadrant()
                                           agv_tray_pose.position.z + 0.3,  setRobotOrientation(agv_rotation)));
 
     waypoints.push_back(utils.build_pose(agv_tray_pose.position.x, agv_tray_pose.position.y,
-                                          agv_tray_pose.position.z + part_heights_[current_task_.part.type],  setRobotOrientation(agv_rotation)));
+                                          agv_tray_pose.position.z + part_heights_[current_task_.part.type]+ drop_height_ ,  setRobotOrientation(agv_rotation)));
 
     double offset=0.001;
     if(retry){
@@ -602,7 +602,7 @@ bool RobotManager::movePartToQuadrant()
                                               agv_tray_pose.position.z + 0.3 + offset,  setRobotOrientation(agv_rotation)));
 
         waypoints.push_back(utils.build_pose(agv_tray_pose.position.x, agv_tray_pose.position.y,
-                                              agv_tray_pose.position.z + part_heights_[current_task_.part.type],  setRobotOrientation(agv_rotation)));
+                                              agv_tray_pose.position.z + part_heights_[current_task_.part.type]+ drop_height_,  setRobotOrientation(agv_rotation)));
         
         offset += 0.001;
         // return false;
@@ -879,8 +879,12 @@ void RobotManager::floorGripperStateCB(const ariac_msgs::msg::VacuumGripperState
     RCLCPP_INFO_STREAM(get_logger(), PURPLE<<"================================================================================"<<RESET);
     RCLCPP_INFO_STREAM(get_logger(), RED<<"Part Dropped Stoping Robot"<<RESET);
     RCLCPP_INFO_STREAM(get_logger(), PURPLE<<"================================================================================"<<RESET);
-
-    floor_robot_->stop();
+    try{
+      floor_robot_->stop();
+    }
+    catch(const std::exception& e){
+      RCLCPP_ERROR_STREAM(get_logger(), RED<<"Error Stopping Robot"<<RESET);
+    }
     pick_and_place = false;
     retry = true;
 
