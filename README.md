@@ -5,11 +5,12 @@
 
 |Name|UID|Github ID| Email ID
 |---|:---:|:---:|:---:|
-|Sai Teja Gilukara|119369623|[Link](https://github.com/saiteja12-g)|saitejag@umd.edu|
-|Akash Parmar|118737430|[Link](https://github.com/akasparm)|akasparm@umd.edu|
 |Shantanu Parab|119347539|[Link](https://github.com/shantanuparabumd)|sparab@umd.edu|
-|Neha Marne|119400210|[Link](https://github.com/marneneha)|nmarne@umd.edu|
-|Bharath Bora|118442112|[Link](https://github.com/BharathRobotics)|bbora@umd.edu|
+
+
+
+Uploading ARIAC.mp4…
+
 
 ## Dependencies Installation
 Run the below commands to install required packages
